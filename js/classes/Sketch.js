@@ -15,6 +15,7 @@ export default class Sketch {
         }
 
         this.objects = []
+        this.time = 0
 
         window.addEventListener("resize", this.resize.bind(this))
     }
@@ -68,6 +69,7 @@ export default class Sketch {
     }
 
     render() {
+        this.time += 0.05
         this.renderer.render(this.scene, this.camera)
 
         for(const object of this.objects) {

@@ -1,12 +1,12 @@
 import * as THREE from "https://esm.sh/three"
 
 export default class Plane { 
-    constructor() {
-        this.object = this.createPlane()
+    constructor(config=[100, 100, 1, 1]) {
+        this.object = this.createPlane(config)
     }
 
-    createPlane() {
-        this.geometry = new THREE.PlaneGeometry(100, 100, 1, 1)
+    createPlane(config) {
+        this.geometry = new THREE.PlaneGeometry(...config)
         this.material = new THREE.MeshPhongMaterial({color: 0xffffff})
 
         const plane = new THREE.Mesh(this.geometry, this.material)
