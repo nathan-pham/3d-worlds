@@ -1,8 +1,8 @@
-import THREE from "https://esm.sh/three"
+import * as THREE from "https://esm.sh/three"
 
 export default class AmbientLight {
     constructor() {
-        this.light = this.createLight()
+        this.object = this.createLight()
     }
     
     createLight() {

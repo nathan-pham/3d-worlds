@@ -1,3 +1,5 @@
+import * as THREE from "https://esm.sh/three"
+
 export default class Sketch {
     constructor({container}={}) {
         this.container = container || document.body
@@ -14,6 +16,7 @@ export default class Sketch {
 
     add(object) {
         this.objects.push(object)
+        this.scene.add(object.object || object)
     }
 
     resize() {
@@ -50,10 +53,7 @@ export default class Sketch {
     }
 
     render() {
-        for(const object of this.objects) {
-
-        }
-
+        this.renderer.render(this.scene, this.camera)
         window.requestAnimationFrame(this.render.bind(this))
     }
 }
