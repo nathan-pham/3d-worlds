@@ -1,8 +1,6 @@
-import * as THREE from "https://esm.sh/three"
-
 export default class Sketch {
     constructor({container}={}) {
-        this.container = container
+        this.container = container || document.body
         this.dimensions = {width: this.container.offsetWidth, height: this.container.offsetHeight}
 
         this.createRenderer()
@@ -52,6 +50,9 @@ export default class Sketch {
     }
 
     render() {
+        for(const object of this.objects) {
+
+        }
 
         window.requestAnimationFrame(this.render.bind(this))
     }
