@@ -8,6 +8,21 @@ export default class Sketch {
         this.createRenderer()
         this.createCamera()
         this.createScene()
+
+        window.addEventListener("resize", this.resize.bind(this))
+
+        this.objects = []
+    }
+
+    add(object) {
+        this.objects.push(object)
+    }
+
+    resize() {
+        this.dimensions = {width: this.container.offsetWidth, height: this.container.offsetHeight}
+        this.renderer.setSize(this.dimensions.width, this.dimensions.height)
+        this.camera.aspect = this.dimensions.width / this.dimensions.height
+        this.camera.updateProjectionMatrix()
     }
 
     createScene() {
