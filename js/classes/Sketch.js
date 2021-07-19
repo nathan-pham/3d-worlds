@@ -5,10 +5,26 @@ export default class Sketch {
         this.container = container
         this.dimensions = {width: this.container.offsetWidth, height: this.container.offsetHeight}
 
-        this.initialize()
+        this.createRenderer()
+        this.createCamera()
+        this.createScene()
     }
 
-    initialize() {
+    createScene() {
+        this.scene = new THREE.Scene()
+    }
+
+    createCamera() {
+        const fov = 60
+        const near = 1
+        const far = 1000
+        const aspect = this.dimensions.width / this.dimensions.height
+
+        this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
+        this.camera.position.z = 5
+    }
+
+    createRenderer() {
         this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true})
 
         this.renderer.shadowMap.enabled = true
@@ -18,5 +34,10 @@ export default class Sketch {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
         this.container.appendChild(this.renderer.domElement)
+    }
+
+    render() {
+
+        window.requestAnimationFrame(this.render.bind(this))
     }
 }
