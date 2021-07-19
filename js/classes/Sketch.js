@@ -1,14 +1,14 @@
 import {OrbitControls} from "https://esm.sh/three/examples/jsm/controls/OrbitControls"
-import * as THREE from "https://esm.sh/three"
+import * as THREE from "http://esm.sh/three"
 
 export default class Sketch {
-    constructor({container, controls}={}) {
-        this.container = container || document.body
+    constructor({container=document.body, controls}={}) {
+        this.container = typeof container == "string" ? document.querySelector(container) : container
         this.dimensions = {width: this.container.offsetWidth, height: this.container.offsetHeight}
 
-        this.createRenderer()
-        this.createCamera()
         this.createScene()
+        this.createCamera()
+        this.createRenderer()
 
         if(controls) {
             this.createControls()
@@ -19,9 +19,11 @@ export default class Sketch {
         window.addEventListener("resize", this.resize.bind(this))
     }
 
-    add(object) {
-        this.objects.push(object)
-        this.scene.add(object.object || object)
+    add(...objects) {
+        for(const object of objects) {
+            this.objects.push(object)
+            this.scene.add(object.object || object)
+        }
     }
 
     resize() {
@@ -50,14 +52,14 @@ export default class Sketch {
         const aspect = this.dimensions.width / this.dimensions.height
 
         this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
-        this.camera.position.z = 5
+        this.camera.position.set(75, 20, 0)
     }
 
     createRenderer() {
         this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true})
 
-        // this.renderer.shadowMap.enabled = true
-        // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
+        this.renderer.shadowMap.enabled = true
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
         this.renderer.setSize(this.dimensions.width, this.dimensions.height)
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
