@@ -1,7 +1,8 @@
+import {OrbitControls} from "https://esm.sh/three/examples/jsm/controls/OrbitControls"
 import * as THREE from "https://esm.sh/three"
 
 export default class Sketch {
-    constructor({container}={}) {
+    constructor({container, controls}={}) {
         this.container = container || document.body
         this.dimensions = {width: this.container.offsetWidth, height: this.container.offsetHeight}
 
@@ -9,9 +10,13 @@ export default class Sketch {
         this.createCamera()
         this.createScene()
 
-        window.addEventListener("resize", this.resize.bind(this))
+        if(controls) {
+            this.createControls()
+        }
 
         this.objects = []
+
+        window.addEventListener("resize", this.resize.bind(this))
     }
 
     add(object) {
@@ -21,9 +26,17 @@ export default class Sketch {
 
     resize() {
         this.dimensions = {width: this.container.offsetWidth, height: this.container.offsetHeight}
-        this.renderer.setSize(this.dimensions.width, this.dimensions.height)
+
         this.camera.aspect = this.dimensions.width / this.dimensions.height
         this.camera.updateProjectionMatrix()
+
+        this.renderer.setSize(this.dimensions.width, this.dimensions.height)
+    }
+
+    createControls() {
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+        this.controls.target.set(0, 0, 0)
+        this.controls.update()
     }
 
     createScene() {
@@ -43,8 +56,8 @@ export default class Sketch {
     createRenderer() {
         this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true})
 
-        this.renderer.shadowMap.enabled = true
-        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
+        // this.renderer.shadowMap.enabled = true
+        // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
         this.renderer.setSize(this.dimensions.width, this.dimensions.height)
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -54,6 +67,13 @@ export default class Sketch {
 
     render() {
         this.renderer.render(this.scene, this.camera)
+
+        for(const object of this.objects) {
+            if(typeof object?.update == "function") {
+                object.update(this)
+            }
+        }
+
         window.requestAnimationFrame(this.render.bind(this))
     }
 }
